@@ -21,6 +21,8 @@ async function run() {
         await client.connect();
         const database = client.db("Car_House");
         const carsCollection = database.collection("Cars");
+        const orderCollection = database.collection('ManageOrder')
+
 
         //Get Cars Collection APi
         app.get('/cars', async (req, res) => {
@@ -28,6 +30,20 @@ async function run() {
             const cars = await cursor.toArray();
             res.send(cars);
         })
+
+        //Get Mange Order APi
+        app.get('/manageorder', async (req, res) => {
+            const cursor = orderCollection.find({});
+            const ManageOrder = await cursor.toArray();
+            res.send(ManageOrder);
+        })
+
+        app.post('/manageorder', async (req, res) => {
+            const newOrder = req.body;
+            const result = await orderCollection.insertOne(newOrder);
+            res.json(result);
+        })
+
 
     }
 
