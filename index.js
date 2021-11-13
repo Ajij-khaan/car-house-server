@@ -23,6 +23,7 @@ async function run() {
         const database = client.db("Car_House");
         const carsCollection = database.collection("Cars");
         const reviewsCollection = database.collection('Review')
+        const usersCollection = database.collection('Users')
 
 
         //Get Cars Collection APi
@@ -63,7 +64,7 @@ async function run() {
             res.json(result);
         })
 
-
+        //POST MANAGE ORDER
         app.post('/manageorder', async (req, res) => {
             const newOrder = req.body;
             const result = await orderCollection.insertOne(newOrder);
@@ -78,14 +79,37 @@ async function run() {
             res.send(cars);
         })
 
-
-        //POST CAR
+        //POST review
         app.post('/reviews', async (req, res) => {
             const newReview = req.body;
             const result = await reviewsCollection.insertOne(newReview);
             res.json(result);
         })
 
+
+        //Get Cars Collection APi
+        app.get('/users', async (req, res) => {
+            const cursor = usersCollection.find({});
+            const user = await cursor.toArray();
+            res.send(user);
+        })
+
+        //POST user
+        app.post('/users', async (req, res) => {
+            const newUser = req.body;
+            const result = await usersCollection.insertOne(newUser);
+            res.json(result);
+        })
+
+        //makeadmi  apu
+
+        app.put('/users/admin', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const updateDoc = { $set: { role: 'admin' } };
+            const result = await usersCollection.updateOne(filter, updateDoc);
+            res.json(result);
+        })
     }
 
     finally {
