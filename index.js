@@ -32,6 +32,14 @@ async function run() {
             res.send(cars);
         })
 
+        //POST CAR
+        app.post('/cars', async (req, res) => {
+            const newCar = req.body;
+            const result = await carsCollection.insertOne(newCar);
+            res.json(result);
+        })
+
+
         //Get Mange Order APi
         app.get('/manageorder', async (req, res) => {
             const cursor = orderCollection.find({});
