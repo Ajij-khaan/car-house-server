@@ -22,7 +22,7 @@ async function run() {
         await client.connect();
         const database = client.db("Car_House");
         const carsCollection = database.collection("Cars");
-        const orderCollection = database.collection('ManageOrder')
+        const reviewsCollection = database.collection('Review')
 
 
         //Get Cars Collection APi
@@ -36,6 +36,14 @@ async function run() {
         app.post('/cars', async (req, res) => {
             const newCar = req.body;
             const result = await carsCollection.insertOne(newCar);
+            res.json(result);
+        })
+
+        //Delete Order
+        app.delete('/cars/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await carsCollection.deleteOne(query);
             res.json(result);
         })
 
@@ -62,6 +70,21 @@ async function run() {
             res.json(result);
         })
 
+
+        //Get Review Collection APi
+        app.get('/reviews', async (req, res) => {
+            const cursor = reviewsCollection.find({});
+            const cars = await cursor.toArray();
+            res.send(cars);
+        })
+
+
+        //POST CAR
+        app.post('/reviews', async (req, res) => {
+            const newReview = req.body;
+            const result = await reviewsCollection.insertOne(newReview);
+            res.json(result);
+        })
 
     }
 
